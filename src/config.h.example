@@ -1,0 +1,17 @@
+#pragma once
+// ==================================================
+// DESKBUDDY CONFIG — copy this file to src/config.h and fill in
+// your own values. src/config.h is gitignored; never commit it.
+// ==================================================
+
+// ---------- WiFi ----------
+#define WIFI_SSID       "YOUR_WIFI_NAME"
+#define WIFI_PASS       "YOUR_WIFI_PASSWORD"
+
+// ---------- OpenWeatherMap ----------
+#define OWM_API_KEY     "YOUR_OPENWEATHERMAP_API_KEY"
+#define OWM_CITY        "Coimbatore"
+#define OWM_COUNTRY     "IN"
+
+// ---------- Time ----------
+#define TZ_STRING       "IST-5:30"   // e.g. IST-5:30, EST5EDT, PST8PDT
