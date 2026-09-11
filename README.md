@@ -1,100 +1,452 @@
-# DeskBuddy — ESP32-S3 Zero + SSD1306
+# 🤖 DeskBuddy — ESP32-S3 Zero + SSD1306
 
-Animated-face desk companion on a 128x64 OLED. Shows an expressive blinking face, a clock, live weather, a 5-day forecast and a world clock, all driven from a single push button. Mood changes with the weather.
+> ### 🌐 A tiny desk companion from **NG Labs**
 
-> **Attribution.** Base firmware is **DeskBuddy by Edison Science Corner (ESC Labs)** — [esclabs.in](https://www.esclabs.in). Eye-animation approach derives from [playfultechnology/esp32-eyes](https://github.com/playfultechnology/esp32-eyes). This repository documents my build and my port to the ESP32-S3 Zero. See [My changes](#my-changes).
+An animated-face desk companion powered by an **ESP32-S3 Zero** and a **128×64 SSD1306 OLED**.
 
-<!-- Add a photo or GIF of the display here. -->
+DeskBuddy combines an expressive animated face with useful everyday information — including a **clock, live weather, 5-day forecast, and world clock** — all controlled through a single push button.
 
-## My changes
+🌦️ **The weather even changes DeskBuddy's mood.**
 
-<!-- Replace these with what you actually did. Delete any that don't apply. -->
-- Ported from ESP32-C3 Super Mini to **ESP32-S3 Zero** — custom board definition (`boards/esp32-s3-zero.json`, 4 MB flash), remapped I²C to GPIO8/9 and the button to GPIO1, USB-CDC-on-boot build flags.
-- Moved all credentials out of source into a gitignored `src/config.h`.
+---
 
-## Hardware
+## ✨ Features
 
-| Part | Detail |
-|---|---|
-| MCU | ESP32-S3 Zero (4 MB flash, no PSRAM) |
-| Display | SSD1306 128x64 OLED, I²C |
-| Input | Momentary push button |
+* 👀 Expressive animated eyes
+* 😉 Natural blinking and eye movement
+* 😴 Breathing / idle animation
+* 😊 Weather-driven moods
+* 🕐 NTP-synchronized clock
+* 🌤️ Live weather information
+* 📅 5-day weather forecast
+* 🌎 Multi-timezone world clock
+* 💡 Adjustable OLED brightness
+* 📡 Built-in Wi-Fi configuration portal
+* 💾 Persistent configuration using ESP32 NVS
+* 🔐 Credentials kept outside the source code
+* 🎛️ Single-button interface
+* ⚡ Built specifically for ESP32-S3 Zero
 
-### Wiring
+---
 
-| ESP32-S3 Zero | Connects to |
-|---|---|
-| 3V3 | OLED VCC |
-| GND | OLED GND |
-| GPIO8 | OLED SDA |
-| GPIO9 | OLED SCL |
-| GPIO1 | Button leg A |
-| GND | Button leg B |
+## 🧠 How It Works
 
-Button uses `INPUT_PULLUP` — no external resistor needed. Verify GPIO8/9 against your board's silkscreen; ESP32-S3 Zero clones vary.
+```text
+                 ┌─────────────────────┐
+                 │     ESP32-S3 Zero   │
+                 │        🧠 MCU        │
+                 └──────────┬──────────┘
+                            │
+              ┌─────────────┼─────────────┐
+              │             │             │
+              ▼             ▼             ▼
+          📡 Wi-Fi       🌦️ Weather      🕐 NTP
+              │             │             │
+              └─────────────┼─────────────┘
+                            ▼
+                    🧠 DeskBuddy Logic
+                            │
+                 ┌──────────┴──────────┐
+                 ▼                     ▼
+             👀 OLED Face          📊 Info Pages
+                 │                     │
+                 └──────────┬──────────┘
+                            ▼
+                     🖥️ SSD1306 OLED
 
-## Setup
-
+                       🔘
+                  Single Push Button
 ```
+
+---
+
+## 🎨 Display Pages
+
+### 👀 Face
+
+The default screen features animated eyes with:
+
+* 👁️ Blinking
+* ↔️ Saccadic eye movement
+* 🫁 Breathing / idle motion
+* 😊 Multiple moods
+* 🌦️ Weather-driven expressions
+
+---
+
+### 🕐 Clock
+
+Displays the current local time using:
+
+* 🌐 NTP synchronization
+* 🗺️ Configurable timezone
+* ⏱️ Automatic time updates
+
+---
+
+### 🌤️ Weather
+
+Displays current weather information for the configured city.
+
+The face reacts to the weather, giving DeskBuddy a little personality. 😄
+
+---
+
+### 📅 5-Day Forecast
+
+View the upcoming weather outlook directly on the OLED.
+
+---
+
+### 🌎 World Clock
+
+Check the time across multiple configured timezones.
+
+Perfect for keeping track of teammates, friends, or projects around the world. 🌍
+
+---
+
+# 🛠️ Hardware
+
+| Component       | Details               |
+| --------------- | --------------------- |
+| 🧠 MCU          | ESP32-S3 Zero         |
+| 💾 Flash        | 4 MB                  |
+| 🧠 PSRAM        | None                  |
+| 🖥️ Display     | SSD1306 128×64 OLED   |
+| 🔌 Interface    | I²C                   |
+| 🔘 Input        | Momentary push button |
+| 📡 Connectivity | Wi-Fi                 |
+
+---
+
+## 🔌 Wiring
+
+| ESP32-S3 Zero | Connects To  |
+| ------------- | ------------ |
+| `3V3`         | OLED VCC     |
+| `GND`         | OLED GND     |
+| `GPIO8`       | OLED SDA     |
+| `GPIO9`       | OLED SCL     |
+| `GPIO1`       | Button leg A |
+| `GND`         | Button leg B |
+
+### 🔘 Button
+
+The button uses:
+
+```cpp
+INPUT_PULLUP
+```
+
+No external resistor is required.
+
+> ⚠️ **Note:** ESP32-S3 Zero boards and clones can have different pin layouts. Verify **GPIO8 / GPIO9** against your board's silkscreen before wiring.
+
+---
+
+# 🔧 NG Labs Changes
+
+This version was adapted and configured specifically for the **ESP32-S3 Zero**.
+
+### ⚡ ESP32-S3 Zero Port
+
+* Custom ESP32-S3 Zero board definition
+* 4 MB flash configuration
+* USB-CDC-on-boot configuration
+* GPIO remapping for the OLED
+* GPIO1 configured for the push button
+
+### 🔌 I²C Configuration
+
+```text
+SDA → GPIO8
+SCL → GPIO9
+```
+
+### 🔐 Credential Separation
+
+Credentials are kept outside the main firmware source.
+
+```text
+src/config.h
+```
+
+is ignored by Git, while:
+
+```text
+src/config.h.example
+```
+
+provides the configuration template.
+
+---
+
+# 📦 Installation
+
+### 1️⃣ Clone the repository
+
+```bash
 git clone https://github.com/nithyaganesh77/deskbuddy-esp32s3.git
+```
+
+```bash
 cd deskbuddy-esp32s3
 ```
 
-```
+### 2️⃣ Create your configuration
+
+```bash
 cp src/config.h.example src/config.h
 ```
 
-Edit `src/config.h` with your Wi-Fi, your [OpenWeatherMap](https://home.openweathermap.org/api_keys) API key, city and POSIX timezone. This file is gitignored.
+Then edit:
 
+```text
+src/config.h
 ```
+
+Add:
+
+* 📡 Wi-Fi SSID
+* 🔑 Wi-Fi password
+* 🌦️ OpenWeatherMap API key
+* 📍 City
+* 🕐 POSIX timezone
+
+> 🔐 `config.h` is intentionally gitignored so credentials aren't committed to the repository.
+
+---
+
+## 🌦️ OpenWeatherMap
+
+Create an API key from:
+
+**OpenWeatherMap**
+
+Then add it to your local configuration.
+
+> ⏳ Newly created API keys may take some time before becoming active.
+
+---
+
+# 🚀 Build & Upload
+
+Using PlatformIO:
+
+```bash
 pio run --target upload
 ```
 
-```
+Then open the serial monitor:
+
+```bash
 pio device monitor
 ```
 
-### Configuring without reflashing
+---
 
-Hold the button for 3 seconds at power-on. The board opens a `DeskBuddy-Setup` Wi-Fi access point — connect and browse to `http://192.168.4.1` to enter Wi-Fi and API details. Settings save to flash (NVS) and override `config.h`.
+# 📡 Configure Without Reflashing
 
-## Controls
+DeskBuddy includes a built-in Wi-Fi configuration portal.
 
-| Action | Result |
-|---|---|
-| Single tap | Next page (face → clock → weather) |
-| Double tap | Toggle brightness |
-| Long press on face | Cycle mood |
-| Long press on clock | Jump to world clock |
-| Long press on weather | Jump to 5-day forecast |
-| Single tap on world clock / forecast | Back |
-| Hold 3 s at boot | Open Wi-Fi config portal |
+### 🔘 Hold the button for 3 seconds during power-on.
 
-## Pages
+DeskBuddy creates:
 
-- **Face** — animated eyes with blinking, saccades, breathing motion and weather-driven mood
-- **Clock** — NTP-synced local time
-- **Weather** — current conditions for the configured city
-- **Forecast** — 5-day outlook
-- **World clock** — multiple timezones
-
-## Troubleshooting
-
-**Blank display.** Wrong I²C address or pins. Most SSD1306 modules are `0x3C`, some are `0x3D`. Run an I²C scanner sketch to confirm both address and that SDA/SCL aren't swapped.
-
-**Weather never loads.** Check the serial monitor. A new OpenWeatherMap key takes up to a couple of hours to activate, and the city name must match OWM's spelling exactly.
-
-**Clock is wrong.** `TZ_STRING` uses POSIX sign convention, which is inverted from what you'd expect — India is `IST-5:30`, not `IST+5:30`.
-
-## Project layout
-
-```
-src/main.cpp            firmware — face animation, pages, weather, config portal
-src/config.h.example    credentials template (copy to src/config.h)
-boards/esp32-s3-zero.json  custom board definition
-platformio.ini          build config and library deps
+```text
+DeskBuddy-Setup
 ```
 
-## License
+Connect to the Wi-Fi network and open:
 
-Base firmware © Edison Science Corner (ESC Labs). Check their terms before redistributing. My modifications are offered under the same terms as the original.
+```text
+http://192.168.4.1
+```
+
+You can then configure:
+
+* 📡 Wi-Fi
+* 🌦️ Weather API
+* 📍 City
+* 🕐 Timezone
+
+Configuration is stored in **ESP32 NVS flash storage**, allowing the settings to survive reboots.
+
+---
+
+# 🎮 Controls
+
+| Action                       | Result                          |
+| ---------------------------- | ------------------------------- |
+| 👆 Single tap                | Next page                       |
+| 👆👆 Double tap              | Toggle brightness               |
+| 👆 Long press on Face        | Change mood                     |
+| 👆 Long press on Clock       | Open World Clock                |
+| 👆 Long press on Weather     | Open Forecast                   |
+| 👆 Single tap on World Clock | Return                          |
+| 👆 Single tap on Forecast    | Return                          |
+| 🔘 Hold 3 sec at boot        | Open Wi-Fi configuration portal |
+
+---
+
+# 🗂️ Project Structure
+
+```text
+DeskBuddy/
+│
+├── 📁 boards/
+│   └── esp32-s3-zero.json
+│
+├── 📁 include/
+│   └── README
+│
+├── 📁 lib/
+│   └── README
+│
+├── 📁 src/
+│   ├── main.cpp
+│   └── config.h.example
+│
+├── 📁 test/
+│   └── README
+│
+├── 📄 platformio.ini
+├── 📄 README.md
+├── 📄 LICENSE
+└── 📄 .gitignore
+```
+
+---
+
+# 🐛 Troubleshooting
+
+### 🖥️ OLED is blank
+
+Check:
+
+* 🔌 Power connections
+* 🔄 SDA/SCL wiring
+* 📍 I²C pins
+* 🔢 OLED I²C address
+
+Most SSD1306 displays use:
+
+```text
+0x3C
+```
+
+Some use:
+
+```text
+0x3D
+```
+
+If necessary, run an I²C scanner to identify the correct address.
+
+---
+
+### 🌦️ Weather doesn't load
+
+Check the serial monitor:
+
+```bash
+pio device monitor
+```
+
+Then verify:
+
+* 🔑 API key
+* 📍 City name
+* 📡 Wi-Fi connection
+* ⏳ API key activation
+
+The city name must match the location recognized by OpenWeatherMap.
+
+---
+
+### 🕐 Clock is incorrect
+
+Check your:
+
+```text
+TZ_STRING
+```
+
+POSIX timezone strings use an inverted sign convention.
+
+For India:
+
+```text
+IST-5:30
+```
+
+not:
+
+```text
+IST+5:30
+```
+
+---
+
+# 💡 Why DeskBuddy?
+
+DeskBuddy started with a simple idea:
+
+> **Why should a tiny OLED only display information when it can have a personality too?** 👀
+
+Instead of building another static IoT dashboard, NG Labs turned the display into a small interactive companion that can **see the time, understand the weather, change its mood, and interact with its owner.**
+
+Small hardware.
+Simple interface.
+A little personality. 🤖❤️
+
+---
+
+# 🧪 NG Labs
+
+### 🔬 Built by **NG Labs**
+
+Exploring the intersection of:
+
+```text
+🤖 Artificial Intelligence
+        +
+🔌 Embedded Systems
+        +
+🌐 Connected Devices
+        +
+⚙️ Automation
+        +
+🧠 Human Interaction
+```
+
+**Build → Experiment → Break → Learn → Improve → Ship 🚀**
+
+---
+
+# 📜 Attribution
+
+The eye-animation approach is derived from:
+
+**playfultechnology/esp32-eyes**
+
+This project documents the **NG Labs build, ESP32-S3 Zero port, hardware configuration, and additional functionality**.
+
+---
+
+# 📄 License
+
+See [`LICENSE`](LICENSE) for the applicable license terms.
+
+---
+
+<div align="center">
+
+## 🤖 NG Labs
+
+**Making hardware a little smarter — and a lot more fun. ⚡**
+
+⭐ Star the repository if you like DeskBuddy!
+
+</div>
